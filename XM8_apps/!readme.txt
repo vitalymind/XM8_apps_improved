@@ -1,5 +1,3 @@
-# XM8_apps_improved
-
 --Improved XM8 apps for Exile mod--
 This script adds "apps" button to XM8.
 This allow use of custom scripts and slides in Exile
