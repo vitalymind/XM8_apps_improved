@@ -54,13 +54,12 @@ Lets fill our slider with contents
 First lets make go back button
 */
 _buttonBack = _display ctrlCreate ["RscButtonMenu",_newSliderIDC + 1,_newSlider];
-_buttonBack ctrlSetPosition [(29 - 3) * _pW,(18 - 2) * _pH,6 * _pW, 1 * _pH];
+_buttonBack ctrlSetPosition [27.6*_pW,17.7*_pH,6*_pW,1*_pH];
 _buttonBack ctrlSetText "GO BACK";
 _buttonBack ctrlSetEventHandler ["ButtonClick","['apps', 1] call ExileClient_gui_xm8_slide"];
 _buttonBack ctrlCommit 0;
 
 //We make app buttons with this function
-
 _makeButtonCtrl = {
 	params ["_idc","_pos","_text","_script","_parent","_pic"];
 	private ["_ctrl"];
@@ -112,7 +111,7 @@ _newTerritoryBut ctrlSetPosition [(23.5 - 3) * _pW,(9.5 - 2) * _pH,6 * _pW, 5 * 
 _newTerritoryBut ctrlSetText getText (configFile >> "CfgXM8" >> "territory" >> "title");
 _newTerritoryBut ctrlSetEventHandler ["ButtonClick","['territory', 0] call ExileClient_gui_xm8_slide"];
 _newTerritoryBut ctrlCommit 0;
-_newTerritoryPic = _display ctrlCreate ["RscPictureKeepAspect",-1,_appSlide];
+_newTerritoryPic = _display ctrlCreate ["RscPictureKeepAspect",(_newSliderIDC + 17),_appSlide];
 _newTerritoryPic ctrlSetText "\exile_assets\texture\ui\xm8_app_territory_ca.paa";
 _newTerritoryPic ctrlSetPosition [(25 - 3) * _pW,(10 - 2) * _pH,(6 * _pW) * 0.5, (5 * _pH) * 0.5];
 _newTerritoryPic ctrlEnable false;
@@ -124,7 +123,7 @@ _sideAppsBut ctrlSetPosition [(30 - 3) * _pW,(9.5 - 2) * _pH,6 * _pW, 5 * _pH];
 _sideAppsBut ctrlSetText getText (missionConfigFile >> "CfgXM8" >> "sideApps" >> "title");
 _sideAppsBut ctrlSetEventHandler ["ButtonClick","['sideApps', 0] call ExileClient_gui_xm8_slide"];
 _sideAppsBut ctrlCommit 0;
-_sideAppsPic = _display ctrlCreate ["RscPictureKeepAspect",-1,_appSlide];
+_sideAppsPic = _display ctrlCreate ["RscPictureKeepAspect",(_newSliderIDC + 18),_appSlide];
 _sideAppsPic ctrlSetText format ["%1%2",XM8_apps_folderPath, "XM8_apps\icons\apps_icon.paa"];
 _sideAppsPic ctrlSetPosition [(31.5 - 3) * _pW,(10 - 2) * _pH,(6 * _pW) * 0.5, (5 * _pH) * 0.5];
 _sideAppsPic ctrlEnable false;

@@ -1,20 +1,26 @@
 // XM8 apps Imporeved by vitaly'mind'chizhikov
+//Official forum thread is http://www.exilemod.com/topic/13295-xm8-apps-improved-xm8-repair-mate/
 // Based on idea XM8 apps by Shix. see http://www.exilemod.com/topic/9040-xm8-apps/?page=1
 
 /*
 Example
 XM8_apps_app1 = [
-	"DeployBike",
-	"XM8_apps\bikeLog.paa",
-	{execVM"custom\deploy_bike.sqf";}
+	"Deploy Bike",
+	"deployBike\bikeIcon.paa",
+	{execVM "deployBike\deploy_bike.sqf";}
+];
+XM8_apps_app2 = [
+	"Server Info",
+	(getText (configfile >> "CfgWeapons" >> "Binocular" >> "picture")),
+	{['server', 1] call ExileClient_gui_xm8_slide;}
 ];
 Comment out apps, that you dont use.
 */
 
 XM8_apps_app1 = [
 	"Repair mate",
-	"custom\XM8_repairMate\icons\repairMate_icon.paa",
-	{0 execVM "custom\XM8_repairMate\scripts\XM8_repairMate_init.sqf"}
+	"XM8_repairMate\icons\repairMate_icon.paa",
+	{"" execVM "XM8_repairMate\scripts\XM8_repairMate_init.sqf"}
 ];
 /*
 XM8_apps_app2 = [

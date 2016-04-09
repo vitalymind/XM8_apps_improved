@@ -1,4 +1,4 @@
---Improved XM8 apps for Exile mod--
+Improved XM8 apps for Exile mod
 This script adds "apps" button to XM8.
 This allow use of custom scripts and slides in Exile
 
@@ -22,22 +22,27 @@ XM8 RepairMate, vehicle repair script, that is
 released along, can be used as example, how to make,
 own slides and navigate slides back and forth.
 
----INSTALLATION---
-- Paste XM8_apps folder anywhere in you mission folder.
-- Add following line to initPlayerLocal.sqf. Adjust path to folder according to where you put it.
+INSTALLATION
+1) Paste XM8_apps folder into root mission folder.
+2) Add following line to initPlayerLocal.sqf.
 	"" execVM "XM8_apps\XM8_apps_config.sqf";
-	if you dont place XM8_apps folder into root mission folder. Then adjust code accordinly. 
-	For example, if you put XM8_apps to folder custom\ code will be as follows.
-	"custom\" execVM "custom\XM8_apps\XM8_apps_config.sqf";
-- Add following line to description.ext at the very bottom, with all other includes. 
-	Adjust path to folder according to where you put it.
-	#include "XM8_apps\scripts\XM8_apps.hpp"
-- Add following lines to CfgExileCustomCode class inside config.cpp 
+		Adjust path to folder according to where you put it.
+		if you dont place XM8_apps folder into root mission folder. Then adjust code accordinly. 
+		For example, if you put XM8_apps to folder "custom\" code will be as follows.
+		"custom\" execVM "custom\XM8_apps\XM8_apps_config.sqf";
+3) Add following line to description.ext at the very bottom.
+	#include "XM8_apps\XM8_apps_sliders.hpp"
+		Adjust path to folder according to where you put it.
+		For example, if you put XM8_apps to folder "custom\" code will be as follows.
+		#include "custom\XM8_apps\XM8_apps_sliders.hpp"
+4) Add following lines to CfgExileCustomCode class inside config.cpp
 	class CfgExileCustomCode 
 	{
 		ExileClient_gui_xm8_show = "custom\XM8_apps\scripts\ExileClient_gui_xm8_show.sqf";
 		ExileClient_gui_xm8_slide_apps_onOpen = "custom\XM8_apps\scripts\ExileClient_gui_xm8_slide_apps_onOpen.sqf";
 		ExileClient_gui_xm8_slide = "custom\XM8_apps\scripts\ExileClient_gui_xm8_slide.sqf";
 	};
-- Fill XM8_apps_config.sqf with apps you like to have.
-- Enjoy!
+		Adjust path to files according to where you put them.
+5) Edit XM8_apps_config.sqf according to instructions provided with apps you want to have.
+6) Edit XM8_apps_sliders.hpp according to instructions provided with apps you want to have. 
+7) Enjoy!
