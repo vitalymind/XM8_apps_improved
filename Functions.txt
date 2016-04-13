@@ -1,0 +1,158 @@
+/*	FUNCTION LIBRARY
+	Below you will find several functions to use while creating your app.
+*/
+
+/*	CONTROL CREATING FUNCTIONS
+	Following functions are used to make controls (elements of interface, buttons, picturs, etc...)
+	Make sure these functions used only once per XM8 oppening, otherwise controls will lay on top of each other.
+	
+	Each function have at least three required arguments.
+	1) _parent This is so called "control group" element of interface that can contain any number of other elements,
+		like buttons and pictures. This type of control is very usefull when you want to move large number of elements,
+		around the screen, without need to move each element independently, you just move whole group.
+		There are so called "slides" in exile they are basically control groups. 
+	2) _idc This is unique ID of control, you will need it, if you want to change control in any way after its creation.
+		IDC is a whole number, make sure there are no more controls in given display with same IDC.
+		If you dont want to have access to control use -1 as IDC.
+	3) _position This is ARRAY containing controls start point on X and Y axis, as well as height and width.
+		you will often see following in this app [1*_pW, 1*_pH, 10*_pW, 10*_pH]. Lets take a closer look at this position array.
+		First of all i recommend read following article https://community.bistudio.com/wiki/SafeZone
+		What is _pH and _pW, these are screen positioning, grid multipliers, they used to help in placing controls.
+		In Exile _pH is equil to 0.04 and _pW is equil to 0.025.
+		Lets say you wonna place frame exactly in the center of XM8 with small indent from all four sides.
+		You can use [0.025, 0.04, 0.8, 0.68] does not make alot sense right? How many atempts you will need to find these numbers?
+		This will give same result [1 * _pW, 1 * _pH, 32 * _pW, 17 * _pH] but it is much more clearly written,
+		Given the fact that Exile`s slider have size of 34 "points" in witdh and 19 "points" in height, we
+		simply step 1 point from left (1 * _pW), one point from top (1 * _pH), we set width to 32 points (32 * _pW) 
+		and height to 17 points (17 * _pH). In the end we have exactly 1 point indent from all sides. Easy :)
+	
+	It is mandatory to have _display variable defined, see below for details.
+	
+	Each function will return control handle, so you can perform additional actions, on created controls.
+*/
+
+_makeProgressBar = {
+	params ["_parent","_idc","_position","_progress","_enabled","_color","_shown","_tooltip"];
+	private ["_ctrl"];
+	_ctrl = _display ctrlCreate ["RscProgress", _idc, _parent];
+	_ctrl ctrlSetPosition _position;
+	_ctrl progressSetPosition _progress;
+	_ctrl ctrlSetTextColor _color;
+	_ctrl ctrlEnable _enabled;
+	_ctrl ctrlShow _shown;
+	_ctrl ctrlSetTooltip _tooltip;
+	_ctrl ctrlCommit 0;
+	_ctrl;
+};
+_makePicture = {
+	params ["_parent","_idc","_position","_picture","_color","_enable","_keepAspect","_tooltip"];
+	private ["_ctrl"];
+	_ctrl = _display ctrlCreate [(if (_keepAspect) then {"RscPictureKeepAspect"} else {"RscPicture"}), _idc, _parent];
+	_ctrl ctrlSetPosition _position;
+	_ctrl ctrlSetText _picture;
+	_ctrl ctrlSetTextColor _color;
+	_ctrl ctrlEnable _enable;
+	_ctrl ctrlSetTooltip _tooltip;
+	_ctrl ctrlCommit 0;
+	_ctrl;
+};
+_makeStructuredText = {
+	params ["_parent","_idc","_position","_text","_font","_size","_color","_align","_shadow"];
+	private ["_ctrl"];
+	_ctrl = _display ctrlCreate ["RscStructuredText", _idc, _parent];
+	_ctrl ctrlSetPosition _position;
+	_ctrl ctrlSetStructuredText (parseText format ["<t shadow='%6' font='%5' align='%4' size='%2' color='%3'>%1</t>", _text,_size,_color, _align,_font,_shadow]);
+	_ctrl ctrlEnable false;
+	_ctrl ctrlCommit 0;
+	_ctrl;
+};
+_makeBackground = {
+	params ["_parent","_idc","_position","_color","_enable","_tooltip"];
+	private ["_ctrl"];
+	_ctrl = _display ctrlCreate ["RscBackground", _idc, _parent];
+	_ctrl ctrlSetPosition _position;
+	_ctrl ctrlSetBackgroundColor _color;
+	_ctrl ctrlEnable _enable;
+	_ctrl ctrlSetTooltip _tooltip;
+	_ctrl ctrlCommit 0;
+	_ctrl;
+};
+_makeFrame = {
+	params ["_parent","_idc","_position"];
+	private ["_ctrl"];
+	_ctrl = _display ctrlCreate ["RscFrame", _idc, _parent];
+	_ctrl ctrlSetPosition _position;
+	_ctrl ctrlEnable false;
+	_ctrl ctrlCommit 0;
+	_ctrl;
+};
+_makeButton = {
+	params ["_parent","_idc","_position","_action","_text","_tooltip"];
+	private ["_ctrl"];
+	_ctrl = _display ctrlCreate ["RscButtonMenu",_idc,_parent];
+	_ctrl ctrlSetPosition _position;
+	_ctrl ctrlSetText _text;
+	_ctrl ctrlSetEventHandler ["ButtonClick",_action];
+	_ctrl ctrlSetTooltip _tooltip;
+	_ctrl ctrlCommit 0;
+	_ctrl;
+};
+_makeList = {
+	params ["_parent","_idc","_position","_actionOnSelChanged","_tooltip"];
+	private ["_ctrl"];
+	_ctrl = _display ctrlCreate ["RscListBox",_idc,_parent];
+	_ctrl ctrlSetPosition _position;
+	_ctrl ctrlSetEventHandler ["LBSelChanged",_actionOnSelChanged];
+	_ctrl ctrlSetTooltip _tooltip;
+	_ctrl ctrlCommit 0;
+	_ctrl;
+};
+
+/*	IDC LIBRARY
+	While working on your app you will need to use alot of IDCs to have controls over GUI elements.
+	IDC is a unique whole number, pointing to specific element, it should be unique for each control.
+	XM8 have hundreeds of controls, it might be real pain to keep track of all these IDCs.
+	So, lets associate string key with IDC number. Key is much simplier to remember then number, 
+	also you will be able to change IDCs without changing code at all, this is ESSENTIAL when,
+	two apps from deferent authors use same IDCs. This system allow eleminate all collisions,
+	without changing code.
+*/
+
+//Use this function to register new IDC and associate it with given key.
+//This function need to be changed according to slide name 
+_getNextIDC = {
+	params ["_key"];
+	private ["_slideClassName","_baseIDC","_result","_map"];
+	_slideClassName = "exampleSlide1"; //Classname of your slide
+	_map = XM8_exampleApp_exampleSlide1IDCmap; //Variable name of IDC map of slide
+	_baseIDC = getNumber (missionConfigFile >> "CfgXM8" >> _slideClassName >> "controlID");
+	_result = _baseIDC + (_map pushBack _key);
+	_result;
+};
+//Use this function to get control associated with given key.
+//This function need to be changed according to slide name 
+_getControl = {
+	params ["_key"]; 
+	private ["_ctrl","_idc","_index","_slideClassName"]; 
+	_ctrl = controlNull;
+	_slideClassName = "exampleSlide1"; //Classname of your slide
+	_map = XM8_exampleApp_exampleSlide1IDCmap; //Variable name of IDC map of slide
+	_index = _map find _key;
+	if (_index != -1) then {
+		_idc = ((getNumber (missionConfigFile >> "CfgXM8" >> _slideClassName >> "controlID")) + _index);
+		_ctrl = _display displayCtrl _idc;
+	};
+	_ctrl;
+};
+
+
+
+
+
+
+
+
+
+
+
+

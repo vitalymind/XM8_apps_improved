@@ -1,5 +1,4 @@
-#Improved XM8 apps for Exile mod
-
+Improved XM8 apps for Exile mod
 This script adds "apps" button to XM8. This allow use of custom scripts and slides in Exile
 This script doing preatty much same thing as Shix xm8Apps, hovewer, there are following deferences:
  - Sliding functionality of Exile is used in natural way.

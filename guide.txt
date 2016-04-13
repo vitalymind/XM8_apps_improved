@@ -1,0 +1,169 @@
+GUIDE. How to make app for Improved XM8 apps
+
+Disclaimer
+This guide assumes you have lesser scripting skills, i will try go step by step and keep things simple.
+Hovewer some scripting knowladge still required.
+
+Overview
+This guide will help you create your app in such a way that it will be compitable with Improved XM8 apps.
+Before reading this guide, download Improved XM8 apps from HERE. There you will find empty app and
+example app. First can be used as blank project, second as "how to" reference. Dont hasitate to
+read through Example app, it is HEAVILY commented and should have all needed info to make your apps
+even without reading this guide, given you have enough skills and understanding of sqf.
+
+This guide is useless without example app, as example app have alot of comments and explanations,
+Also see repairMate for numerous GUI elements examples. Structure of both
+apps is identical to structure of emtpyApp. Also see example mission. Open mission in editor
+with Exile mod enabled. Preview mission. From scroll menu press "open XM8". This will simulate XM8,
+and you will be able to test your app FAST. There are no "server side" staff ofcaurse, but
+user interface is preatty much same as on real server.
+
+Step 1
+Start off by copying XM8_emptyApp folder. This folder, along with XM8 apps can be downloaded from HERE.
+First of all rename copied folder to XM8_xxx, where xxx is the name of your app. Figure out some short
+but still descriptive name. Do not use spaces and non-literal symbols.
+
+Step 2
+Inside folder you will see "icons" and "scripts" folders, as well as "XM8_emptyApp_config.sqf". Rename it
+to XM8_xxx_config.sqf where xxx is again your app`s name. "Icons" folder is empty, you will use it to store
+all pictures and icons used in your app. "Scripts" foldercontain 2 files "XM8_emptyApp_init.sqf" and
+"XM8_emptyApp_emptySlide_onLoad.sqf". Rename both files in the same way as config file.
+
+Step 3
+At this point we have 3 files in total, "config", "init" and "Slide_onLoad".
+These three files are absolute minimum for any app compatible with improved XM8 apps.
+Lets briefly see what these files contains.
+"config" - This file used to give control over scripts behaviour to server admin.
+By default it is empty, but it may contain public variables and public functions, that
+you want server admin to change. Config script will be executed once, when player login.
+"init". This script doing three major tasks. They are: Compiling all app`s global functions, 
+define app`s global variables, and executing "config". This script will execute only once,
+when player login.
+"slide_onLoad" - This script creates slide itself and fill it with GUI elements, like buttons and texts.
+This script will be executed everytime when XM8 switched on (6 pressed).
+
+Step 4
+Lets start with "XM8_<yourApp>_emptySlide_onLoad.sqf". Rename it to "XM8_<yourApp>_xxx_onLoad.sqf" 
+where xxx is name of your first slide. Open file and change top description in the way you like.
+As you can see file already have minimal needed code. 
+
+Lets start with function _getNextIDC.
+See _slideClassName = "emptySlide"; change "emptySlide" to "<yourSlideName>".
+See _map = XM8_emptyApp_emptySlideIDCmap; change XM8_emptyApp_emptySlideIDCmap to XM8_<yourAppName>_<yourSlideName>IDCmap
+
+Continue with error mesages 
+See _error = "Error loading XM8 Empty app, display is null" change to your liking.
+Same with _error = "Error loading XM8 Empty app, slides control is null".
+
+Now cleanup
+See //Lets clean up this slide`s IDC map. XM8_emptyApp_emptySlideIDCmap = []; change to XM8_<yourAppName>_<yourSlideName>IDCmap
+
+Script have predefined "GO BACK" button, you can ofcaurse change it, resize it, etc.
+But i encourage you to leave it "as is", in order to have similarity with others apps.
+
+Step 5XM8_apps_app1 = [
+	"Example app",
+	"XM8_apps\apps\XM8_exampleApp\icons\exampleIcon.paa",
+	{["exampleSlide1", 0] call ExileClient_gui_xm8_slide},
+	TRUE,
+	"XM8_apps\apps\XM8_exampleApp\scripts\XM8_exampleApp_init.sqf"
+];
+Going forward with "XM8_<yourApp>_init.sqf". 
+Open file and change top description to your liking.
+
+See XM8_emptyApp_emptySlideIDCmap = []; change to XM8_<yourAppName>_<yourSlideName>IDCmap = [];
+
+Define other global variables below XM8_<yourAppName>_<yourSlideName>IDCmap.
+It is good practice to define all global variables ahead, even if you do it
+in code again later. This will keep things clear and organized.
+stick to following naming convention XM8_<yourAppName>_<descriptiveVariableName>
+
+See following code segment
+[code]
+{
+	if (isNil _x) then {
+		_code = compileFinal (preprocessFileLineNumbers (format (["%1scripts\%2.sqf",_pathToScriptFolder,_x])));
+		if (isNil "_code") then {_code = compileFinal ""};
+		missionNamespace setVariable [_x, _code];
+	};
+} forEach [
+	"XM8_emptyApp_emptySlide_onLoad"
+];
+[/code]
+As you can see, there is only one function to be compiled. If you need to have more global functions,
+Create separate file for each global function, place them to XM8_<yourAppName>/script/ folder,
+stick to following naming convention XM8_<yourAppName>_<descriptiveFunctionName>.sqf
+Include top description, with authors, credits, overview etc...
+NOTE! Make sure you do not initialize global functions elsewhere. It will compromise server security.
+
+Step 6
+Even if you did not add any Gui elements, your app should be "useble" at this point.
+Go ahead and add it to XM8_apps within example mission in order to check that all work fine.
+Make sure to run arma with -showScriptErrors parametr.
+
+In order to add app to XM8 do following.
+1) Copy XM8_<yourAppName> folder to XM8_apps\apps\ folder.
+2) Edit "XM8_apps/XM8_apps_config.sqf"
+	Uncomment next available app, and change it`s contents to
+	XM8_apps_app<availableAppNumber> = [
+		//Descriptive name of you app, same in folder name, funtions, variables etc...
+		"<yourAppName>",
+		//You can use default icon "XM8_apps\icons\generic_app.paa" or expression that will return path to 
+		//icon, like this (getText (configFile >> "CfgWeapons" >> "Binocular" >> "picture"))
+		"<fullPathToIconFile>",
+		//Application button pressed action. Basically call Exile`s "slide" function with given slide 
+		//name and sliding direction. 0 from right to left, 1 from left to right.
+		{["<yourSlideName>", 0] call ExileClient_gui_xm8_slide},
+		//Use TRUE. FALSE only for legacy apps, made before improved XM8 apps release.
+		true,
+		//Full path to app`s init script for example "XM8_apps\apps\XM8_exampleApp\scripts\XM8_exampleApp_init.sqf"
+		"<fullPathToAppsScriptFolder>\XM8_<yourAppName>_init.sqf"
+	];
+3) Edit "XM8_apps/XM8_apps_sliders.hpp"
+	Add new class for each slide in your app.
+	class CfgXM8 {
+		...
+		<other classes>
+		...
+		//This slide use IDCs from 100000 to 100020. This slide use 21 IDCs. (20 elements + slide).
+		class <yourSlideName> {
+			//Start IDC, whole positive number. Will always point to slide control group.
+			//This number will be used as starting point. Created controls will get IDC incremently.
+			//Basically first button will have IDC = (controlID + 1), second btton will have IDC = (controlID + 2), etc...
+			//It is good idea to let user know how many IDCs are used, this will eleminate any chance of collisions.
+			//Take some long number, for less chance of collisions, but not bigger then 999999.
+			//Server admin can change controlID (in case of collisions), because, in code, IDCs are NEVER used directly.
+			controlID = 100000;
+			//Title of slide, shown in upper center of XM8
+			title = "Example app. Main slide.";
+			//Path to "slide_onLoad" script. Must be full path from mission root like this 
+			//"XM8_apps\apps\XM8_exampleApp\scripts\XM8_exampleApp_exampleSlide1_onLoad.sqf"
+			onLoadScript = "XM8_apps\apps\XM8_<yourAppName>\scripts\XM8_<yourAppName>_<yourSlideName>_onLoad.sqf";
+		};
+	};
+
+This actions will give you slideable app, to which you can add controls, effects and mechanics.
+The rest is up to you, figure out what GUI elements you need and create them.
+Use example app as reference, see functions.txt for GUI making functions.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

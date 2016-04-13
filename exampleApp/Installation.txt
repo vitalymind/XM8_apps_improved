@@ -1,0 +1,39 @@
+ExampleApp script for Exile mod
+This script serves as example, how to make applications for Improved XM8 apps.
+
+Authors
+code - vitaly'mind'chizhikov
+
+Future plans
+
+
+INSTALLATION
+1) Copy XM8_ExampleApp folder to XM8_apps\apps\ folder.
+2) Edit "XM8_apps/XM8_apps_config.sqf"
+	Uncomment next available app, and change it`s contents to
+	XM8_apps_app<availableAppNumber> = [
+		"Example app",
+		"XM8_apps\apps\XM8_exampleApp\icons\exampleIcon.paa",
+		{["exampleSlide1", 0] call ExileClient_gui_xm8_slide},
+		TRUE,
+		"XM8_apps\apps\XM8_exampleApp\scripts\XM8_exampleApp_init.sqf"
+	];
+3) Edit "XM8_apps/XM8_apps_sliders.hpp" Add two new classes.
+	class CfgXM8 {
+		...
+		<other classes>
+		...
+		//This slide use IDCs from 352500 to 
+		class exampleSlide1 {
+			controlID = 352500;
+			title = "Example app. Main slide.";
+			onLoadScript = "XM8_apps\apps\XM8_exampleApp\scripts\XM8_exampleApp_exampleSlide1_onLoad.sqf";
+		};
+		//This slide use IDCs from 452500 to 
+		class exampleSlide2 {
+			controlID = 452500;
+			title = "Example app. Sub slide.";
+			onLoadScript = "XM8_apps\apps\XM8_exampleApp\scripts\XM8_exampleApp_exampleSlide2_onLoad.sqf";
+		};
+	};
+4) Enjoy!

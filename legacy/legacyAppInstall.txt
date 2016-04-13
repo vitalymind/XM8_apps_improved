@@ -1,0 +1,23 @@
+It is possible to install older apps to improved XM8 apps.
+Hovewer it is not guaranteed, that they will work.
+
+Usually installation instruction looks like this
+//App 1
+_app1Text = "View Distance";
+_app1Logo = getText (configfile >> "CfgWeapons" >> "Binocular" >> "picture");
+app1_action = {
+  execVM "xm8Apps\Apps\View Distance\VeiwDistance.sqf";
+};
+
+To install this app to improved XM8, you need to do following.
+1) Place script file or folder into "XM8_apps\apps" folder
+2) Edit "XM8_apps_config.sqf".
+	Uncomment next available app and fill it in with.
+	XM8_apps_app<numberOfAvailableApp> = [
+		"View Distance",
+		(getText (configFile >> "CfgWeapons" >> "Binocular" >> "picture")),
+		{execVM "XM8_apps\apps\VeiwDistance.sqf"},
+		false, //Leave this to false for legacy (old) app
+		"" //Leave this to empty for legacy (old) app
+	];
+3) enjoy (not so much).

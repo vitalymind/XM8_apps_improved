@@ -1,0 +1,14 @@
+It is possible to adapt any legacy (old) app to work with improved XM8 apps,
+there are two ways to do that. 
+
+First and the best way is following.
+For Each step, use example app as reference.
+1)	Take empty app as blank project.
+2)	Use guide.txt to adjust blank project.
+3)	Extract global functions and save them to separate files. 
+	Keep naming convention. Keep app file/folder structure.
+4)	Compile functions, define variables and apply configuration in app`s "init" script.
+5)	Fill in "slide_onLoad" with your controls.
+
+Basically, idea is to extract mechanics and controls, and insert them to improved
+XM8 apps framework.

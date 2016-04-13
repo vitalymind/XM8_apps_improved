@@ -1,0 +1,8 @@
+class CfgExileCustomCode 
+{
+	ExileClient_gui_xm8_show = "XM8_apps\scripts\ExileClient_gui_xm8_show.sqf";
+	ExileClient_gui_xm8_slide_apps_onOpen = "XM8_apps\scripts\ExileClient_gui_xm8_slide_apps_onOpen.sqf";
+	ExileClient_gui_xm8_slide = "XM8_apps\scripts\ExileClient_gui_xm8_slide.sqf";
+};
+#include "XM8_apps\XM8_apps_sliders.hpp"
+

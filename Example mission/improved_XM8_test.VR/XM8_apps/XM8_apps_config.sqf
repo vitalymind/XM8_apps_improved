@@ -29,31 +29,31 @@ XM8_apps_app1 = [
 	"Example app",
 	"XM8_apps\apps\XM8_exampleApp\icons\exampleIcon.paa",
 	{["exampleSlide1", 0] call ExileClient_gui_xm8_slide},
-	TRUE,
+	true,
 	"XM8_apps\apps\XM8_exampleApp\scripts\XM8_exampleApp_init.sqf"
 ];
-/*
 XM8_apps_app2 = [
-	"App 2",
-	"",
-	{},
-	false,
-	""
+	"Empty app",
+	"XM8_apps\icons\generic_app.paa",
+	{["emptySlide", 0] call ExileClient_gui_xm8_slide},
+	true,
+	"XM8_apps\apps\XM8_emptyApp\scripts\XM8_emptyApp_init.sqf"
 ];
 XM8_apps_app3 = [
-	"App 3",
-	"",
-	{},
+	"View Distance",
+	(getText (configFile >> "CfgWeapons" >> "Binocular" >> "picture")),
+	{execVM "XM8_apps\apps\VeiwDistance.sqf"},
 	false,
 	""
 ];
 XM8_apps_app4 = [
-	"App 4",
-	"",
-	{},
-	false,
-	""
+	"Repair Mate",
+	"XM8_apps\apps\XM8_repairMate\icons\repairMate_icon.paa",
+	{call XM8_repairMate_checkNearByVehicles},
+	true,
+	"XM8_apps\apps\XM8_repairMate\scripts\XM8_repairMate_init.sqf"
 ];
+/*
 XM8_apps_app5 = [
 	"App 5",
 	"",
@@ -132,3 +132,6 @@ XM8_apps_app15 = [
 	""
 ];
 */
+
+//Dont change whats below :)
+XM8_apps_folderPath = _this;
