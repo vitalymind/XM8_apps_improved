@@ -9,26 +9,28 @@
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/.
  */
  
-// XM8 apps Imporeved by vitaly'mind'chizhikov
-// Based on idea XM8 apps by Shix. see http://www.exilemod.com/topic/9040-xm8-apps/?page=1
-// Original function from Exile 0.9.6
- 
-private["_display","_health","_popTabsValue","_popTabs","_respectValue","_respect"];
+private["_display","_killDeathRatio","_killDeathRatioControl","_popTabsValue","_popTabs","_respectValue","_respect"];
 disableSerialization;
 _display = uiNameSpace getVariable ["RscExileXM8", displayNull];
-_health = _display displayCtrl 4057;
-_health ctrlSetStructuredText parseText (format ["<t color='#00b2cd' font='OrbitronLight' size='1.6' valign='middle' align='center' shadow='0'><br/><br/><br/><t font='OrbitronMedium' size='3.5' color='#ffffff'>%1%2</t><br/>HEALTH</t>", round ((1 - damage player) * 100), "%"]);
-_popTabsValue = ExileClientPlayerMoney;
-if (_popTabsValue > 999) then
-{
+if (ExileClientPlayerDeaths < 1) then {
+	_killDeathRatio = ExileClientPlayerKills;
+} else {
+	_killDeathRatio = [ExileClientPlayerKills / ExileClientPlayerDeaths, 2] call ExileClient_util_math_round;
+};
+_killDeathRatioControl = _display displayCtrl 4057;
+_killDeathRatioControl ctrlSetTooltip format ["%1 Kills / %2 Deaths", ExileClientPlayerKills, ExileClientPlayerDeaths];
+_killDeathRatioControl ctrlSetStructuredText parseText (format ["<t color='#00b2cd' font='OrbitronLight' size='1.6' valign='middle' align='center' shadow='0'><br/><br/><br/><t font='OrbitronMedium' size='3.5' color='#ffffff'>%1</t><br/>K/D</t>", _killDeathRatio]);
+
+_popTabsValue = (player getVariable ["ExileLocker", 0]);
+if (_popTabsValue > 999) then {
 	_popTabsValue = format ["%1k", floor (_popTabsValue / 1000)];
 };
 _popTabs = _display displayCtrl 4058;
-_popTabs ctrlSetTooltip format["%1", ExileClientPlayerMoney];
+_popTabs ctrlSetTooltip format["You have %1 Pop Tabs in your locker", (player getVariable ["ExileLocker", 0])];
 _popTabs ctrlSetStructuredText parseText (format ["<t color='#00b2cd' font='OrbitronLight' size='1.6' valign='middle' align='center' shadow='0'><br/><br/><br/><t font='OrbitronMedium' size='3.5' color='#ffffff'>%1</t><br/>POP TABS</t>", _popTabsValue]);
+
 _respectValue = ExileClientPlayerScore;
-if (_respectValue > 999) then
-{
+if (_respectValue > 999) then {
 	_respectValue = format ["%1k", floor (_respectValue / 1000)];
 };
 _respect = _display displayCtrl 4059;
@@ -44,4 +46,3 @@ _oldTerritoryBut = _appSlide controlsGroupCtrl 1113;
 _oldTerritoryBut ctrlShow false;
 _oldTerritoryBut ctrlSetFade 0;
 _oldTerritoryBut ctrlCommit 0;
-
